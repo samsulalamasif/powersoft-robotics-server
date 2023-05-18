@@ -67,12 +67,11 @@ async function run() {
         // my toy data update
         app.put("/update/:id", async (req, res) => {
             const id = req.params.id
+            const updatedBookData = req.body
             const query = { _id: new ObjectId(id) }
             const updateDoc = {
                 $set: {
-                    price: body.price,
-                    quantity: body.quantity,
-                    details: body.details,
+                    ...updatedBookData
                 },
             };
             const result = await toyCollection.updateOne(query, updateDoc)
