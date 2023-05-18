@@ -26,8 +26,26 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-
         const toyCollection = client.db("PowersoftRobotics").collection("addToy")
+
+
+        const indexKeys = { toyName: 1 };
+        const indexOptions = { name: "toyName" };
+        const result = await toyCollection.createIndex(indexKeys, indexOptions);
+
+
+        app.get("/toySearch/:text", async (req, res) => {
+            const text = req.params.text
+            const result = await toyCollection.find({
+                $or: [{ toyName: { $regex: text, $options: "i" } }]
+            }).toArray()
+            res.send(result)
+        })
+
+
+
+
+
 
 
         // ----add toy data----
