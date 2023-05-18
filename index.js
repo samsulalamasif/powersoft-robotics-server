@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -30,7 +30,7 @@ async function run() {
         const toyCollection = client.db("PowersoftRobotics").collection("addToy")
 
 
-        // ----add toy----
+        // ----add toy data----
         app.post("/addToy", async (req, res) => {
             const body = req.body
             // console.log(body);
@@ -39,8 +39,7 @@ async function run() {
         })
 
 
-        // all toy show
-
+        // all toy data show
         app.get("/allToys", async (req, res) => {
             const cursor = toyCollection.find().limit(20)
             const result = await cursor.toArray()
@@ -48,12 +47,38 @@ async function run() {
         })
 
 
+        // toy single data details show
+        app.get("/details/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await toyCollection.findOne(query)
+            res.send(result)
+        })
 
-        // my toy
+
+
+        // my email toy  data
         app.get("/myToy/:email", async (req, res) => {
             const result = await toyCollection.find({ email: req.params.email }).toArray()
             res.send(result)
         })
+
+
+        // my toy data update
+        app.put("/update/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    price: body.price,
+                    quantity: body.quantity,
+                    details: body.details,
+                },
+            };
+            const result = await toyCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+
 
 
 
