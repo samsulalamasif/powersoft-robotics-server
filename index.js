@@ -42,12 +42,18 @@ async function run() {
         // all toy show
 
         app.get("/allToys", async (req, res) => {
-            const cursor = toyCollection.find()
+            const cursor = toyCollection.find().limit(20)
             const result = await cursor.toArray()
             res.send(result)
         })
 
 
+
+        // my toy
+        app.get("/myToy/:email", async (req, res) => {
+            const result = await toyCollection.find({ email: req.params.email }).toArray()
+            res.send(result)
+        })
 
 
 
