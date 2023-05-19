@@ -28,11 +28,9 @@ async function run() {
         await client.connect();
         const toyCollection = client.db("PowersoftRobotics").collection("addToy")
 
-
         const indexKeys = { toyName: 1 };
         const indexOptions = { name: "toyName" };
         const result = await toyCollection.createIndex(indexKeys, indexOptions);
-
 
         app.get("/toySearch/:text", async (req, res) => {
             const text = req.params.text
@@ -41,11 +39,6 @@ async function run() {
             }).toArray()
             res.send(result)
         })
-
-
-
-
-
 
 
         // ----add toy data----
@@ -74,7 +67,6 @@ async function run() {
         })
 
 
-
         // my email toy  data
         app.get("/myToy/:email", async (req, res) => {
             const result = await toyCollection.find({ email: req.params.email }).toArray()
@@ -93,6 +85,7 @@ async function run() {
                 },
             };
             const result = await toyCollection.updateOne(query, updateDoc)
+            // console.log(result);
             res.send(result)
         })
 
